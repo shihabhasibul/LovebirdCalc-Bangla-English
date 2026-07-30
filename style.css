@@ -8,7 +8,14 @@
    lovebird's own coral/orange plumage as the natural accent.
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Mulish:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&family=Hind+Siliguri:wght@400;500;600;700&display=swap');
+@import url('htt@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Mulish:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;600;700&display=swap');ps://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Mulish:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&family=Hind+Siliguri:wght@400;500;600;700&display=swap');
+
+@font-face {
+  font-family: 'BanglaNumbers';
+  src: local('Noto Sans Bengali');
+  /* This Unicode range covers ONLY the Bangla numerals 0-9 (০-৯) */
+  unicode-range: U+09E6-U+09EF;
+}
 
 :root{
   /* --- LAB brand --- */
@@ -42,9 +49,9 @@
   --dam:#B0466B; --dam-soft:#F7E7ED;
   /* --- system --- */
   --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
-  --sans:"Mulish","Hind Siliguri",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  --display:"Fraunces","Hind Siliguri",Georgia,serif;
-  --display-header:"Playfair Display","Hind Siliguri",Georgia,serif;
+  --sans: "BanglaNumbers", "Mulish", "Hind Siliguri", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --display: "BanglaNumbers", "Fraunces", "Hind Siliguri", Georgia, serif;
+  --display-header: "BanglaNumbers", "Playfair Display", "Hind Siliguri", Georgia, serif;
   --r:12px; --r-sm:8px;
   --sh-sm:0 1px 2px rgba(23,58,40,.06),0 1px 3px rgba(23,58,40,.10);
   --sh-md:0 6px 20px rgba(23,58,40,.08),0 2px 6px rgba(23,58,40,.06);
