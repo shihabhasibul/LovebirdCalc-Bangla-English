@@ -53,7 +53,7 @@ function translateBirdName(nameStr) {
     bn = bn.replace(/ \(male\)/g, " (মেল)");
     bn = bn.replace(/ \(female\)/g, " (ফিমেল)");
     bn = bn.replace(/ type 1/g, " Type 1");
-    bn = bn.replace(/ type 2/g, " Type ২");
+    bn = bn.replace(/ type 2/g, " Type 2");
     return bn;
 }
 
@@ -79,10 +79,9 @@ const I18N = {
     subtitle: ["Advanced Lovebird Genetic Calculator: The Professional Inheritance Engine", "অ্যাডভান্সড লাভবার্ড জেনেটিক ক্যালকুলেটর: দ্যা প্রফেশনাল ইনহেরিটেন্স ইঞ্জিন"],
     selectSpeciesLabel: ["Select Lovebird Species:", "লাভবার্ডের প্রজাতি সিলেক্ট করুন"],
     speciesNone: ["-- Select Species --", "প্রজাতি সিলেক্ট করুনঃ"],
-    speciesNoneOption: ["-- Select Species --", "প্রজাতি সিলেক্ট করুন"],
     speciesWhiteEyeRing: ["White Eye-Ring Group (<i>A. fischeri</i>, <i>A. personatus</i>, <i>A. lilianae</i>, <i>A. nigrigenis</i>)", "হোয়াইট আই-রিং গ্রুপ (<i>A. fischeri</i>, <i>A. personatus</i>, <i>A. lilianae</i>, <i>A. nigrigenis</i>)"],
     speciesWhiteEyeRingOption: ["White Eye-Ring Group (Fischeri, Personatus, Lilianae, Nigrigenis)", "হোয়াইট আই-রিং গ্রুপ (Fischeri, Personatus, Lilianae, Nigrigenis)"],
-    speciesRoseicollis: ["<i>Agapornis roseicollis</i>", "রোজেকলিস (<i>Agapornis roseicollis</i>)"],
+    speciesRoseicollis: ["<i>Agapornis roseicollis</i>", "রোজিকলিস (<i>Agapornis roseicollis</i>)"],
     speciesTaranta: ["<i>Agapornis taranta</i>", "টারান্টা (<i>Agapornis taranta</i>)"],
     autoSelect: ["Auto Select", "অটো সিলেক্ট"],
     sireSearchPlaceholder: ["Enter male mutation name here", "ইংরেজিতে মেল পাখির মিউটেশনের নাম লেখুন"],
@@ -205,7 +204,7 @@ const NOTE_TRANSLATIONS_BN = {
     "Note: DM Jade is an autosomal recessive, sexually dimorphic mutation. Although inheritance is predicted accurately, males and females with the same genotype may look different. Therefore, the visual appearance of offspring depends on their sex as well as their genotype.": "নোটঃ DM Jade একটি অটোসোমাল রিসেসিভ এবং সেক্সুয়ালি ডাইমরফিক (Sexually Dimorphic) মিউটেশন। ক্যালকুলেটরটি সঠিকভাবে ফলাফল দেখালেও, একই মিউটেশনের মেল এবং ফিমেল দেখতে আলাদা হতে পারে। তাই, বাচ্চা ভিজ্যুয়ালি (visually) দেখতে কেমন হবে তা তার লিঙ্গ ও জিনোটাইপের উপর নির্ভর করবে।",
     "Sexually dimorphic — males and females with the same genotype can look different.": "Sexually dimorphic --- একই মিউটেশনের মেল এবং ফিমেল দেখতে আলাদা হতে পারে",
     "Sapphire is not a separate mutation — it's the blue1-blue2 crossed-over mutant, not a new gene.": "Sapphire কোনো আলাদা মিউটেশন নয় --- এটি blue1-blue2 ক্রসিং-ওভারের মাধ্যমে তৈরি মিউট্যান্ট, নতুন কোনো জিন নয়।",
-    "Note: The crossover (linkage) rate between SL dominant greywing and other sex-linked mutations (opaline, pallid, pale, cinnamon) has not yet been established by researchers. Until this data becomes available, the calculator assumes these mutations are inherited completely independently of one another.": "নোটঃ SL dominant greywing এবং অন্যান্য সেক্স-লিংকড মিউটেশনের (opaline, pallid, pale, cinnamon) মধ্যে ক্রসিং-ওভার (লিংকেজ) রেট গবেষকরা এখনও নির্ধারণ করতে পারেননি। সঠিক ডেটা না পাওয়া পর্যন্ত, ক্যালকুলেটরটি ধরে নেবে যে এই মিউটেশনগুলো একে অপরের থেকে সম্পূর্ণ স্বাধীনভাবে বংশগতি লাভ করে (inherit হয়)।"
+    "Note: The crossover (linkage) rate between SL dominant greywing and other sex-linked mutations (opaline, pallid, pale, cinnamon) has not yet been established by researchers. Until this data becomes available, the calculator assumes these mutations are inherited completely independently of one another.": "নোটঃ SL dominant greywing এবং অন্যান্য সেক্স-লিংকড মিউটেশনের (opaline, pallid, pale, cinnamon) মধ্যে ক্রসিং-ওভার (লিংকেজ) রেট গবেষকরা এখনও নির্ধারণ করতে পারেননি। সঠিক ডেটা না পাওয়া পর্যন্ত, ক্যালকুলেটরটি ধরে নেবে যে এই মিউটেশনগুলো একে অপরের থেকে সম্পূর্ণ স্বাধীনভাবে বংশগতি (inherit) লাভ করে।"
 };
 function translateNote(enText) {
     if (currentLang === 'en' || !enText) return enText;
@@ -706,25 +705,48 @@ function parseState(containerId, isMale) {
 }
 
 function generateZGametesMale(z1, z2) {
-    let chrom1 = zMapOrder.map(l => z1.find(a => mutationDB.find(m => m.id === a)?.locus === l) || "+");
-    let chrom2 = zMapOrder.map(l => z2.find(a => mutationDB.find(m => m.id === a)?.locus === l) || "+");
-    if (JSON.stringify(chrom1) === JSON.stringify(chrom2)) return [{ chr: 'Z', genes: chrom1.filter(a => a !== "+"), prob: 1.0 }];
-    let gametes = [], perms = 1 << zMapOrder.length;
+    // 1. Filter to only include loci that have mutations present in this specific bird
+    const activeLoci = zMapOrder.filter(l => 
+        z1.some(a => mutationDB.find(m => m.id === a)?.locus === l) ||
+        z2.some(a => mutationDB.find(m => m.id === a)?.locus === l)
+    );
+
+    // If no sex-linked traits are present, return wildtype Z
+    if (activeLoci.length === 0) {
+        return [{ chr: 'Z', genes: [], prob: 1.0 }];
+    }
+
+    // Map the chromosomes only against the active loci
+    let chrom1 = activeLoci.map(l => z1.find(a => mutationDB.find(m => m.id === a)?.locus === l) || "+");
+    let chrom2 = activeLoci.map(l => z2.find(a => mutationDB.find(m => m.id === a)?.locus === l) || "+");
+    
+    if (JSON.stringify(chrom1) === JSON.stringify(chrom2)) {
+        return [{ chr: 'Z', genes: chrom1.filter(a => a !== "+"), prob: 1.0 }];
+    }
+    
+    let gametes = [], perms = 1 << activeLoci.length;
     for (let i = 0; i < perms; i++) {
         let genes = [], p = 1.0;
-        for (let j = 0; j < zMapOrder.length; j++) {
+        for (let j = 0; j < activeLoci.length; j++) {
             let from2 = (i & (1 << j)) !== 0;
             genes.push(from2 ? chrom2[j] : chrom1[j]);
             if (j > 0) {
                 let cross = from2 !== ((i & (1 << (j - 1))) !== 0);
-                let link = linkageDB.find(x => x.loci.includes(zMapOrder[j - 1]) && x.loci.includes(zMapOrder[j]));
+                // The loop now checks adjacency based strictly on the active loci
+                let link = linkageDB.find(x => x.loci.includes(activeLoci[j - 1]) && x.loci.includes(activeLoci[j]));
                 p *= cross ? (link ? link.recombination : 0.5) : (link ? (1 - link.recombination) : 0.5);
             }
         }
         gametes.push({ genes: genes.filter(a => a !== "+"), prob: p / 2 });
     }
+    
     let condensed = {};
-    gametes.forEach(g => { let k = g.genes.sort().join("_"); if (!condensed[k]) condensed[k] = { genes: g.genes, prob: 0 }; condensed[k].prob += g.prob; });
+    gametes.forEach(g => { 
+        let k = g.genes.sort().join("_"); 
+        if (!condensed[k]) condensed[k] = { genes: g.genes, prob: 0 }; 
+        condensed[k].prob += g.prob; 
+    });
+    
     return Object.values(condensed).filter(g => g.prob > 0);
 }
 
@@ -2813,6 +2835,59 @@ window.applySmartFix = function(sex, compoundId) {
     handleSearchInput(sex); // Refresh the engine with the fixed text
 };
 
+window.applySmartFixVisual = function(sex, mutId) {
+    const prefix = sex === 'male' ? 'sire' : 'dam';
+    const inputEl = document.getElementById(`${prefix}-search-input`);
+    const species = document.getElementById("species").value;
+    
+    // Parse current input quietly
+    let parsed = processSearchQuery(inputEl.value, species, sex);
+    
+    let newQueryParts = [];
+    let splitParts = [];
+    let possParts = [];
+    
+    let targetMut = mutationDB.find(x => x.id === mutId);
+    
+    // Harvest valid visuals
+    parsed.visuals.forEach(t => {
+        let m = mutationDB.find(x => x.id === t.id);
+        if (m) newQueryParts.push(m.result_label || m.name);
+    });
+    
+    // Inject the newly promoted visual trait
+    if (targetMut) {
+        newQueryParts.push(targetMut.result_label || targetMut.name);
+    }
+    
+    // Harvest valid splits
+    parsed.splits.forEach(t => {
+        let m = mutationDB.find(x => x.id === t.id);
+        if (m) splitParts.push(m.result_label || m.name);
+    });
+
+    // Harvest possible splits
+    parsed.possibleAxes.forEach(ax => {
+        let cands = ax.type === 'confirmed_plus_poss' ? [ax.poss] : (ax.candidates || []);
+        cands.forEach(c => {
+            let m = mutationDB.find(x => x.id === c.id);
+            if (m) possParts.push(m.result_label || m.name);
+        });
+    });
+    
+    // Reconstruct the string
+    let finalString = newQueryParts.join(" ");
+    if (splitParts.length > 0) {
+        finalString += " split " + splitParts.join(" and ");
+    }
+    if (possParts.length > 0) {
+        finalString += " poss " + possParts.join(" poss ");
+    }
+    
+    inputEl.value = finalString.trim();
+    handleSearchInput(sex); // Refresh the engine
+};
+
 function processSearchQuery(query, species, sex) {
     if (!query) return { visuals: [], splits: [], suggested: [], leftover: "", warningText: "", ownBreedingWarnings: [], possibleAxes: [] };
 
@@ -2893,7 +2968,7 @@ function processSearchQuery(query, species, sex) {
             let m = mutationDB.find(x => x.id === t.id);
             return m ? m.name : t.id;
         }).join(" ");
-        let visPrefix = baseVisNames || t("Green","গ্রিন");
+        let visPrefix = baseVisNames || t("Green","Green");
         
         let opts = [];
         if (arrIds.length >= 3) {
@@ -2980,7 +3055,7 @@ function processSearchQuery(query, species, sex) {
                             let m = mutationDB.find(dbm => dbm.id === x.id);
                             return m ? m.name : x.id;
                         }).join(" ");
-                        let visPrefix = baseVisNames || window.t("Green","গ্রিন");
+                        let visPrefix = baseVisNames || window.t("Green","Green");
                         
                         let a0 = (m1.result_label || m1.name).toLowerCase();
                         let a1 = (m2.result_label || m2.name).toLowerCase();
@@ -2989,14 +3064,14 @@ function processSearchQuery(query, species, sex) {
                         opts.push(`1. <a href="javascript:void(0)" onclick="applyCompoundSplitFix('${sex}', '${baseVisNames.replace(/'/g, "\\'")}', '${m1.id}', '${m2.id}')" style="color:#007bff;text-decoration:underline;">${visPrefix} / ${a0} // ${a1}</a>`);
                         opts.push(`2. <a href="javascript:void(0)" onclick="applyCompoundSplitFix('${sex}', '${baseVisNames.replace(/'/g, "\\'")}', '${m2.id}', '${m1.id}')" style="color:#007bff;text-decoration:underline;">${visPrefix} / ${a1} // ${a0}</a>`);
 
-                        let optionsHtml = `<br><br>${window.t("If you are unsure of the bird's exact genetics, try one of these valid options instead (click to apply):", "পাখির সঠিক জেনেটিক্স সম্পর্কে আপনি নিশ্চিত না হলে, নিচের সঠিক বিকল্পগুলোর যেকোনো একটি বেছে নিতে পারেন (অ্যাপ্লাই করতে ক্লিক করুন):")}<br>${opts.join("<br>")}`;
+                        let optionsHtml = `<br><br>${window.t("If you are unsure of the bird's exact genetics, try one of these valid options instead (click to apply):", "")}<br>${opts.join("<br>")}`;
 
                         splitWarnings.push(window.t(
                             `⚠️ <strong>Notice:</strong> '${m2.name}' (split) was ignored. A bird cannot carry two hidden alleles on the same gene (${t1.locus}-locus). Carrying both '${m1.name}' and '${m2.name}' would automatically make this bird a visual ${compoundName} compound.`,
-                            `⚠️ নোটিশ: '${m2.name}' (split) বাদ দেওয়া হয়েছে। একটি পাখির একই জিনের (${t1.locus}-locus) দুটো অ্যালিল একসাথে স্প্লিট হিসেবে থাকতে পারে না। একই সাথে '${m1.name}' এবং '${m2.name}' থাকলে পাখিটি স্বাভাবিকভাবেই একটি ভিজ্যুয়াল ${compoundName} কম্পাউন্ড হয়ে যাবে।`
+                            `⚠️ নোটিশ: '${m2.name}' (split) বাদ দেওয়া হয়েছে। একটি পাখির একই জিনের (${t1.locus}-locus) দুটো অ্যালিল একসাথে স্প্লিট হিসেবে থাকতে পারে না। একই সাথে '${m1.name}' এবং '${m2.name}' থাকলে পাখিটি স্বাভাবিকভাবেই একটি ভিজ্যুয়াল ${compoundName} কম্পাউন্ড হয়ে যাবে। পাখির সঠিক জেনেটিক্স সম্পর্কে আপনি নিশ্চিত না হলে, নিচের সঠিক বিকল্পগুলোর যেকোনো একটি বেছে নিতে পারেন (অ্যাপ্লাই করতে ক্লিক করুন):`
                         ) + optionsHtml);
                     } else {
-                        splitWarnings.push(window.t(`⚠️ <strong>Notice:</strong> '${m2.name}' (split) was ignored. A bird cannot carry two hidden alleles on the same gene (${t1.locus}-locus).`, `⚠️ নোটিশ: '${m2.name}' (split) বাদ দেওয়া হয়েছে। একটি পাখির একই জিনের (${t1.locus}-locus) দুটো অ্যালিল একসাথে স্প্লিট হিসেবে থাকতে পারে না।`));
+                        splitWarnings.push(window.t(`⚠️ <strong>Notice:</strong> '${m2.name}' (split) was ignored. A bird cannot carry two hidden alleles on the same gene (${t1.locus}-locus).`, `⚠️ নোটিশ: '${m2.name}' (split) বাদ দেওয়া হয়েছে। একটি পাখির একই জিনের (${t1.locus}-locus) দুটো অ্যালিল একসাথে স্প্লিট হিসেবে থাকতে পারে না। পাখির সঠিক জেনেটিক্স সম্পর্কে আপনি নিশ্চিত না হলে, নিচের সঠিক বিকল্পগুলোর যেকোনো একটি বেছে নিতে পারেন (অ্যাপ্লাই করতে ক্লিক করুন):`));
                     }
                 } else {
                     splitWarnings.push(window.t(`⚠️ <strong>Notice:</strong> '${m2.name}' (split) was ignored due to biological capacity limits on the ${t1.locus}-locus.`, `⚠️ নোটিশ: ${t1.locus}-locus এর ধারণক্ষমতার সীমাবদ্ধতার কারণে '${m2.name}' (split) বাদ দেওয়া হয়েছে।`));
@@ -3056,7 +3131,32 @@ function processSearchQuery(query, species, sex) {
             finalRawSplits.push(s);
         }
     });
+// --- NEW: Filter out biologically impossible "splits" (Dominant traits & SL traits in females) ---
+    let validFinalRawSplits = [];
+    finalRawSplits.forEach(t => {
+        let dbMut = mutationDB.find(m => m.id === t.id);
+        if (!dbMut) return;
 
+        let mutName = dbMut.result_label || dbMut.name;
+        let fixFn = `applySmartFixVisual('${sex}', '${dbMut.id}')`;
+
+        if (["AD", "AID", "SLID", "SLD"].includes(dbMut.type)) {
+            splitWarnings.push(window.t(
+                `⚠️ <strong>Notice:</strong> A bird cannot be 'split' for <strong>${mutName}</strong>. Because it is a dominant trait, carrying even one copy makes it visually show up. Did you mean to add it as a visual trait?<br><br><a href="javascript:void(0)" onclick="${fixFn}" class="smart-fix-btn" style="color: #007bff; text-decoration: underline; cursor: pointer; display: inline-block;">[Click here to add Visual ${mutName}]</a>`,
+                `⚠️ <strong>নোটিশ:</strong> কোনো পাখি <strong>${mutName}</strong>-এর 'স্প্লিট' হতে পারে না। কারণ এটি একটি ডমিন্যান্ট (dominant) মিউটেশন, এর একটি কপি থাকলেই তা পাখিতে ভিজ্যুয়ালি প্রকাশ পায়। আপনি কি এটিকে ভিজ্যুয়াল মিউটেশন হিসেবে যোগ করতে চেয়েছিলেন?<br><br><a href="javascript:void(0)" onclick="${fixFn}" class="smart-fix-btn" style="color: #007bff; text-decoration: underline; cursor: pointer; display: inline-block;">[ভিজ্যুয়াল ${mutName} যোগ করতে এখানে ক্লিক করুন]</a>`
+            ));
+        } else if (sex === "female" && dbMut.type.includes("SL")) {
+            splitWarnings.push(window.t(
+                `⚠️ <strong>Notice:</strong> A female bird cannot be 'split' for <strong>${mutName}</strong>. Female lovebirds only have one Z sex chromosome, so sex-linked traits cannot be carried hidden—they are always visual. Did you mean to add it as a visual trait?<br><br><a href="javascript:void(0)" onclick="${fixFn}" class="smart-fix-btn" style="color: #007bff; text-decoration: underline; cursor: pointer; display: inline-block;">[Click here to add Visual ${mutName}]</a>`,
+                `⚠️ <strong>নোটিশ:</strong> মাদি (ফিমেল) পাখি <strong>${mutName}</strong>-এর 'স্প্লিট' হতে পারে না। ফিমেল লাভবার্ডের মাত্র একটি Z সেক্স-ক্রোমোজোম থাকে, তাই সেক্স-লিংকড মিউটেশন কখনো 'স্প্লিট' অবস্থায় থাকতে পারে না—এটি সবসময় ভিজ্যুয়াল হয়। আপনি কি এটিকে ভিজ্যুয়াল মিউটেশন হিসেবে যোগ করতে চেয়েছিলেন?<br><br><a href="javascript:void(0)" onclick="${fixFn}" class="smart-fix-btn" style="color: #007bff; text-decoration: underline; cursor: pointer; display: inline-block;">[ভিজ্যুয়াল ${mutName} যোগ করতে এখানে ক্লিক করুন]</a>`
+            ));
+        } else {
+            // Keep valid splits (like recessive traits)
+            validFinalRawSplits.push(t);
+        }
+    });
+    finalRawSplits = validFinalRawSplits;
+    // -------------------------------------------------------------------------------------------------
     let finalVisuals = [];
     let finalSplits = [];
     let rejectedNames = [];
@@ -3174,8 +3274,67 @@ function processSearchQuery(query, species, sex) {
         splitWarnings.push(`⚠️ <strong>${t("Notice:","নোটিশ:")}</strong> ${msg}`);
     });
     // ---------------------------------------------------
-    
+    // --- NEW: SL Phase Parsing (Cis vs Trans based on '-' vs '/') ---
+    if (sex === 'male') {
+        let slTraits = [...finalVisuals, ...finalSplits].filter(t => {
+            let m = mutationDB.find(x => x.id === t.id);
+            return m && m.type.includes("SL") && (t.val === 1 || t.isSplit);
+        });
 
+        if (slTraits.length > 1) {
+            // Uses the fuzzy position helper to map aliases and typos back to the raw string
+            let traitPositions = getSLTraitPositions(query.toLowerCase(), slTraits, species);
+            traitPositions.sort((a, b) => a.pos - b.pos);
+
+            let currentZ = traitPositions[0].trait.z || "z1";
+            traitPositions[0].trait.z = currentZ;
+
+            for (let i = 1; i < traitPositions.length; i++) {
+                let prev = traitPositions[i - 1];
+                let curr = traitPositions[i];
+                
+                if (curr.trait.z) {
+                    currentZ = curr.trait.z;
+                    continue; 
+                }
+                
+                if (prev.pos !== 9999 && curr.pos !== 9999 && prev.pos < curr.pos) {
+                    let endOfPrev = prev.pos + prev.len;
+                    let separatorRaw = query.toLowerCase().substring(endOfPrev, curr.pos);
+                    
+                    // If a hyphen connects them anywhere in the gap, they are Cis
+                    if (separatorRaw.includes("-")) {
+                        curr.trait.z = prev.trait.z; 
+                    } else {
+                        curr.trait.z = prev.trait.z === "z1" ? "z2" : "z1"; 
+                    }
+                } else {
+                    curr.trait.z = currentZ === "z1" ? "z2" : "z1";
+                }
+                currentZ = curr.trait.z;
+            }
+        }
+    }
+    // --- NEW: Dark Factor Phase Parsing (T1 vs T2) ---
+    let hasDF = [...finalVisuals, ...finalSplits].some(t => t.id === "dark_factor" && (t.val === 1 || t.isSplit));
+    let blueTraits = [...finalVisuals, ...finalSplits].filter(t => t.locus === "bl" && t.id !== "green");
+    
+    // Phase only matters if there is 1 Dark Factor and 1 Blue-series mutation
+    if (hasDF && blueTraits.length === 1) {
+        let dfTrait = [...finalVisuals, ...finalSplits].find(t => t.id === "dark_factor");
+        
+        // Scan the entire query for any variation of type 1 or type 2 keywords
+        let phaseMatch = query.match(/\b(t1|t2|type\s*1|type\s*2|tipe\s*1|tipe\s*2)\b/i);
+        if (phaseMatch) {
+            let pStr = phaseMatch[0].toLowerCase().replace(/\s+/g, '');
+            if (pStr === 't1' || pStr === 'type1' || pStr === 'tipe1') {
+                dfTrait.t = "T1";
+            } else if (pStr === 't2' || pStr === 'type2' || pStr === 'tipe2') {
+                dfTrait.t = "T2";
+            }
+        }
+    }
+    // ---------------------------------------------------------------
 
     let warningText = [...splitWarnings, ...possibleNotes].join("<br><br>");
     if (rejectedNames.length > 0) {
@@ -3266,8 +3425,238 @@ window.updateSearchLinkage = function(containerId, sex, traitId, type, val) {
         targetRadio.checked = true;
         handleConstraints(containerId, sex);
         renderLivePreview();
+
+        // Auto-correct the search input text for SL phase (Cis vs Trans)
+        if (type === 'z' && sex === 'male') {
+            autoCorrectSLPhaseText(sex);
+        }
+        // NEW: Auto-correct the search input text for Dark Factor phase (T1 vs T2)
+        if (type === 't') {
+            autoCorrectDFPhaseText(sex);
+        }
     }
 };
+
+// --- NEW HELPER: Auto-corrects Dark Factor phase keywords in the search box ---
+function autoCorrectDFPhaseText(sex) {
+    const prefix = sex === 'male' ? 'sire' : 'dam';
+    const inputEl = document.getElementById(`${prefix}-search-input`);
+    let query = inputEl.value;
+    if (!query) return;
+
+    const container = document.getElementById(`${prefix}-categories`);
+    let dfRadio = container.querySelector(`input[name="${sex}_dark_factor_t"]:checked`);
+    if (!dfRadio) return; 
+
+    let activeT = dfRadio.value; // "T1" or "T2"
+    let displayPhase = activeT === "T1" ? "type 1" : "type 2";
+
+    // Regex to find existing phase markers (including fuzzy typos like "tipe 1")
+    let phaseRegex = /\b(t1|t2|type\s*1|type\s*2|tipe\s*1|tipe\s*2)\b/ig;
+    
+    if (query.match(phaseRegex)) {
+        // Replace existing phase keyword with the new one
+        query = query.replace(phaseRegex, displayPhase);
+    } else {
+        // No phase keyword found in text, safely append it to the end
+        query = query.trim() + " " + displayPhase;
+    }
+
+    // Apply text update silently to avoid infinite loops
+    if (inputEl.value !== query) {
+        inputEl.value = query;
+    }
+}
+
+// --- NEW HELPER: Maps parsed traits to their actual positions in the raw text using fuzzy logic ---
+function getSLTraitPositions(queryLower, slTraits, species) {
+    let dictionary = buildDynamicDictionary(species);
+    let words = queryLower.split(/([\/-\s]+)/); // Tokenize while keeping delimiters
+    
+    return slTraits.map(t => {
+        // Find all possible dictionary aliases and keys for this specific trait
+        let validKeys = dictionary.filter(entry => {
+            let res = entry.res(species, t.isSplit);
+            return res.some(r => r.id === t.id);
+        }).map(e => e.key);
+
+        let currentPos = 0;
+        let bestPos = 9999;
+        let matchedLen = 0;
+
+        for (let i = 0; i < words.length; i++) {
+            let token = words[i];
+            if (token.match(/[\/-\s]+/)) {
+                currentPos += token.length;
+                continue;
+            }
+            
+            let matchFound = false;
+            for (let key of validKeys) {
+                let keyWords = key.split(' ');
+                if (keyWords.length > 1) {
+                    let isMultiMatch = true;
+                    let lookAheadPos = i;
+                    let tempLen = 0;
+                    for (let j = 0; j < keyWords.length; j++) {
+                        while (lookAheadPos < words.length && words[lookAheadPos].match(/[\/-\s]+/)) {
+                            tempLen += words[lookAheadPos].length;
+                            lookAheadPos++;
+                        }
+                        if (lookAheadPos >= words.length || !isFuzzyMatch(words[lookAheadPos], keyWords[j])) {
+                            isMultiMatch = false;
+                            break;
+                        }
+                        tempLen += words[lookAheadPos].length;
+                        lookAheadPos++;
+                    }
+                    if (isMultiMatch) {
+                        bestPos = currentPos;
+                        matchedLen = tempLen;
+                        matchFound = true;
+                        break;
+                    }
+                } else {
+                    if (isFuzzyMatch(token, key)) {
+                        bestPos = currentPos;
+                        matchedLen = token.length;
+                        matchFound = true;
+                        break;
+                    }
+                }
+            }
+            if (matchFound) break; // Found the earliest match
+            currentPos += token.length;
+        }
+        return { id: t.id, trait: t, pos: bestPos, len: matchedLen };
+    });
+}
+
+function autoCorrectSLPhaseText(sex) {
+    const prefix = sex === 'male' ? 'sire' : 'dam';
+    const inputEl = document.getElementById(`${prefix}-search-input`);
+    const query = inputEl.value;
+    if (!query) return;
+
+    const species = document.getElementById("species").value;
+    let parsed = processSearchQuery(query, species, sex);
+    
+    let slTraits = [...parsed.visuals, ...parsed.splits].filter(t => {
+        let m = mutationDB.find(x => x.id === t.id);
+        return m && m.type.includes("SL") && (t.val === 1 || t.isSplit);
+    });
+
+    if (slTraits.length > 1) {
+        const container = document.getElementById(`${prefix}-categories`);
+        
+        // Sync current UI state into slTraits
+        slTraits.forEach(t => {
+            let radio = container.querySelector(`input[name="${sex}_${t.id}_z"]:checked`);
+            t.z = radio ? radio.value : "z1";
+        });
+
+        let queryLower = query.toLowerCase();
+        // Use the new fuzzy position helper!
+        let traitPositions = getSLTraitPositions(queryLower, slTraits, species);
+        traitPositions.sort((a, b) => a.pos - b.pos);
+
+        let newQuery = query;
+        let offset = 0;
+
+        for (let i = 1; i < traitPositions.length; i++) {
+            let prev = traitPositions[i - 1];
+            let curr = traitPositions[i];
+            
+            if (prev.pos !== 9999 && curr.pos !== 9999 && prev.pos < curr.pos) {
+                let endOfPrev = prev.pos + prev.len;
+                let separatorRaw = queryLower.substring(endOfPrev, curr.pos);
+                
+                let isCurrentlyCis = separatorRaw.includes("-");
+                let shouldBeCis = prev.trait.z === curr.trait.z;
+                
+                if (shouldBeCis && !isCurrentlyCis) {
+                    let actualStart = endOfPrev + offset;
+                    let actualEnd = curr.pos + offset;
+                    newQuery = newQuery.substring(0, actualStart) + "-" + newQuery.substring(actualEnd);
+                    offset += 1 - (actualEnd - actualStart);
+                } 
+                else if (!shouldBeCis && isCurrentlyCis) {
+                    let actualStart = endOfPrev + offset;
+                    let actualEnd = curr.pos + offset;
+                    newQuery = newQuery.substring(0, actualStart) + "/" + newQuery.substring(actualEnd);
+                    offset += 1 - (actualEnd - actualStart);
+                }
+            }
+        }
+
+        if (newQuery !== query) {
+            inputEl.value = newQuery;
+        }
+    }
+}
+
+function autoCorrectSLPhaseText(sex) {
+    const prefix = sex === 'male' ? 'sire' : 'dam';
+    const inputEl = document.getElementById(`${prefix}-search-input`);
+    const query = inputEl.value;
+    if (!query) return;
+
+    const species = document.getElementById("species").value;
+    let parsed = processSearchQuery(query, species, sex);
+    
+    let slTraits = [...parsed.visuals, ...parsed.splits].filter(t => {
+        let m = mutationDB.find(x => x.id === t.id);
+        return m && m.type.includes("SL") && (t.val === 1 || t.isSplit);
+    });
+
+    if (slTraits.length > 1) {
+        const container = document.getElementById(`${prefix}-categories`);
+        
+        // Sync current UI state into slTraits
+        slTraits.forEach(t => {
+            let radio = container.querySelector(`input[name="${sex}_${t.id}_z"]:checked`);
+            t.z = radio ? radio.value : "z1";
+        });
+
+        let queryLower = query.toLowerCase();
+        // Use the new fuzzy position helper!
+        let traitPositions = getSLTraitPositions(queryLower, slTraits, species);
+        traitPositions.sort((a, b) => a.pos - b.pos);
+
+        let newQuery = query;
+        let offset = 0;
+
+        for (let i = 1; i < traitPositions.length; i++) {
+            let prev = traitPositions[i - 1];
+            let curr = traitPositions[i];
+            
+            if (prev.pos !== 9999 && curr.pos !== 9999 && prev.pos < curr.pos) {
+                let endOfPrev = prev.pos + prev.len;
+                let separatorRaw = queryLower.substring(endOfPrev, curr.pos);
+                
+                let isCurrentlyCis = separatorRaw.includes("-");
+                let shouldBeCis = prev.trait.z === curr.trait.z;
+                
+                if (shouldBeCis && !isCurrentlyCis) {
+                    let actualStart = endOfPrev + offset;
+                    let actualEnd = curr.pos + offset;
+                    newQuery = newQuery.substring(0, actualStart) + "-" + newQuery.substring(actualEnd);
+                    offset += 1 - (actualEnd - actualStart);
+                } 
+                else if (!shouldBeCis && isCurrentlyCis) {
+                    let actualStart = endOfPrev + offset;
+                    let actualEnd = curr.pos + offset;
+                    newQuery = newQuery.substring(0, actualStart) + "/" + newQuery.substring(actualEnd);
+                    offset += 1 - (actualEnd - actualStart);
+                }
+            }
+        }
+
+        if (newQuery !== query) {
+            inputEl.value = newQuery;
+        }
+    }
+}
 
 function buildSuggestionButton(t, containerId, sex, autoSelectMode, isAlternative = false, isPoss = false) {
     let dbMut = mutationDB.find(m => m.id === t.id);
