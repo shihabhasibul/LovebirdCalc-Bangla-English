@@ -2719,12 +2719,9 @@ function parseTraitsStr(str, species, isSplit) {
     while (i < words.length) {
         let matchFound = false;
         
-        // allEntries is still sorted longest-to-shortest, so it correctly 
-        // prioritizes "double dark" over "dark" at this exact word position
         for (let entry of allEntries) {
             let keyWords = entry.key.split(' ');
             
-            // Check if there are enough words left in the array to match this key
             if (i + keyWords.length <= words.length) {
                 let isMatch = true;
                 for (let j = 0; j < keyWords.length; j++) {
@@ -2735,18 +2732,22 @@ function parseTraitsStr(str, species, isSplit) {
                 }
                 
                 if (isMatch) {
-                    // Look for modifiers right before or right after the matched term
                     let explicitZyg = null, explicitZ = null, explicitT = null;
-                    let modBefore = i > 0 ? words[i-1] : null;
-                    let modAfter = i + keyWords.length < words.length ? words[i + keyWords.length] : null;
+                    let modBeforeIdx = i > 0 ? i - 1 : -1;
+                    let modAfterIdx = i + keyWords.length < words.length ? i + keyWords.length : -1;
+                    
+                    let consumedIndices = [];
 
-                    [modBefore, modAfter].forEach(mod => {
-                        if (!mod) return;
-                        if (mod === 'sf') explicitZyg = 1;
-                        if (mod === 'df') explicitZyg = 2;
-                        if (mod === 'z1' || mod === 'z2') explicitZ = mod;
-                        if (mod === 't1' || mod === 'type1') explicitT = 'T1';
-                        if (mod === 't2' || mod === 'type2') explicitT = 'T2';
+                    [modBeforeIdx, modAfterIdx].forEach(idx => {
+                        if (idx === -1) return;
+                        let mod = words[idx];
+                        let matched = false;
+                        if (mod === 'sf') { explicitZyg = 1; matched = true; }
+                        if (mod === 'df') { explicitZyg = 2; matched = true; }
+                        if (mod === 'z1' || mod === 'z2') { explicitZ = mod; matched = true; }
+                        if (mod === 't1' || mod === 'type1') { explicitT = 'T1'; matched = true; }
+                        if (mod === 't2' || mod === 'type2') { explicitT = 'T2'; matched = true; }
+                        if (matched) consumedIndices.push(idx);
                     });
 
                     let traitsToApply = entry.res(species, isSplit);
@@ -2776,15 +2777,27 @@ function parseTraitsStr(str, species, isSplit) {
                     traitsToApply.forEach(t => processTrait(t, foundTraits));
                     traitsToSuggest.forEach(t => processTrait(t, suggestedTraits));
 
-                    // Remove the matched words from the array and stop checking dictionary
-                    words.splice(i, keyWords.length);
+                    // Track if we delete the word *before* the current position
+                    let removedBefore = consumedIndices.includes(modBeforeIdx);
+                    
+                    // Build a list of all array indices we need to delete (keyword + modifiers)
+                    let indicesToRemove = [];
+                    for (let k = 0; k < keyWords.length; k++) indicesToRemove.push(i + k);
+                    indicesToRemove.push(...consumedIndices);
+                    
+                    // Sort descending so splicing doesn't mess up the array order!
+                    indicesToRemove.sort((a, b) => b - a);
+                    indicesToRemove.forEach(idx => words.splice(idx, 1));
+                    
+                    // If we deleted the word behind us, shift the scanner back one spot
+                    if (removedBefore) i--;
+
                     matchFound = true;
                     break; 
                 }
             }
         }
         
-        // Only move to the next word if we didn't find a match at this position
         if (!matchFound) {
             i++;
         }
@@ -3315,6 +3328,30 @@ function processSearchQuery(query, species, sex) {
             }
         }
     }
+    // --- NEW: Violet + Green Override ---
+    // If the dictionary automatically added Blue1 because of the word "violet", 
+    // but the user explicitly typed "green", we must remove the Blue1 trait.
+    let isExplicitGreen = /\b(green|সবুজ)\b/i.test(query);
+    let hasVioletBase = finalVisuals.some(t => t.id === "violet");
+    
+    if (isExplicitGreen && hasVioletBase) {
+        // Remove the auto-added blue1
+        finalVisuals = finalVisuals.filter(t => t.id !== "blue1");
+        
+        // Ensure green is officially added back in for the rendering engine
+        if (!finalVisuals.some(t => t.id === "green")) {
+            let greenMut = mutationDB.find(m => m.id === "green");
+            if (greenMut) {
+                finalVisuals.push({ 
+                    id: "green", 
+                    val: 2, 
+                    locus: greenMut.locus, 
+                    type: greenMut.type 
+                });
+            }
+        }
+    }
+    // ------------------------------------
     // --- NEW: Dark Factor Phase Parsing (T1 vs T2) ---
     let hasDF = [...finalVisuals, ...finalSplits].some(t => t.id === "dark_factor" && (t.val === 1 || t.isSplit));
     let blueTraits = [...finalVisuals, ...finalSplits].filter(t => t.locus === "bl" && t.id !== "green");
